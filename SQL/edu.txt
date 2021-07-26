@@ -1,0 +1,21 @@
+create schema edudb;
+CREATE TABLE student(
+student_id char(8) NOT NULL,
+first_name varchar(20) NOT NULL,
+last_name varchar(20) NOT NULL,
+dob date NOT NULL,
+gender char(1),
+address varchar(30),
+note text,
+clazz_id char(8),
+CONSTRAINT pk_student primary key(student_id)
+);
+CREATE TABLE class(
+clazz_id char(8) NOT NULL,
+name varchar(20),
+lecture_id char(5),
+monitor_id char(8),
+CONSTRAINT pk_clazz primary key(clazz_id),
+CONSTRAINT fk_clazz1 foreign key(monitor_id) references student(student_id)
+);
+alter table student add CONSTRAINT fk_clazzstudent foreign key(clazz_id) references class(clazz_id);

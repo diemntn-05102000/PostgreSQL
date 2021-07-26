@@ -1,0 +1,111 @@
+ ProductID | OrderID | CustomerID | PurchaseDate | Quantity | TotalCost 
+-----------+---------+------------+--------------+----------+-----------
+ LAP001    | ORD001  | BLU001     | 2012-08-21   |        1 |      130₫
+ LAP002    | ODR002  | BLU003     | 2012-02-03   |        2 |      200₫
+ LAP001    | ORD003  | WIL001     | 2012-06-06   |        1 |      130₫
+(3 rows)
+
+ CustomerID | LastName | FirstName |   Address    |  City   | State |  Zip  |  Phone   
+------------+----------+-----------+--------------+---------+-------+-------+----------
+ BLU003     | Katie    | AAAA      | 342 Pine     | Hammond | IN    | 46200 | 555-9242
+ BLU005     | Rich     | Bbbbbbbb  | 123 Main St. | Chicago | IL    | 60633 | 555-1234
+ WIL001     | Frank    | Williams  | 456 Oak St.  | Hammond | IN    | 46102 | 
+ BLU001     | Jessica  | Blum      | 229 State    | Whiting | IN    | 46300 | 555-0921
+(4 rows)
+
+ CustomerID | LastName | FirstName |   Address    |  City   | State |  Zip  |  Phone   
+------------+----------+-----------+--------------+---------+-------+-------+----------
+ BLU003     | Katie    | AAAA      | 342 Pine     | Hammond | IN    | 46200 | 555-9242
+ BLU005     | Rich     | Bbbbbbbb  | 123 Main St. | Chicago | IL    | 60633 | 555-1234
+ WIL001     | Frank    | Williams  | 456 Oak St.  | Hammond | IN    | 46102 | 
+ BLU001     | Jessica  | Blum      | 229 State    | Whiting | IN    | 46300 | 555-0921
+(4 rows)
+
+COPY 1
+ CustomerID | LastName | FirstName |   Address    |  City   | State |  Zip  |  Phone   
+------------+----------+-----------+--------------+---------+-------+-------+----------
+ BLU003     | Katie    | AAAA      | 342 Pine     | Hammond | IN    | 46200 | 555-9242
+ BLU005     | Rich     | Bbbbbbbb  | 123 Main St. | Chicago | IL    | 60633 | 555-1234
+ WIL001     | Frank    | Williams  | 456 Oak St.  | Hammond | IN    | 46102 | 
+ BLU001     | Jessica  | Blum      | 229 State    | Whiting | IN    | 46300 | 555-0921
+ BLU008     | Blum8    | Barbara   | 879 Oak      | Gary    | IN    | 46100 | 555-4321
+(5 rows)
+
+ CustomerID | LastName | FirstName |   Address    |  City   | State |  Zip  |  Phone   
+------------+----------+-----------+--------------+---------+-------+-------+----------
+ BLU003     | Katie    | AAAA      | 342 Pine     | Hammond | IN    | 46200 | 555-9242
+ BLU005     | Rich     | Bbbbbbbb  | 123 Main St. | Chicago | IL    | 60633 | 555-1234
+ WIL001     | Frank    | Williams  | 456 Oak St.  | Hammond | IN    | 46102 | 
+ BLU001     | Jessica  | Blum      | 229 State    | Whiting | IN    | 46300 | 555-0921
+ BLU008     | Blum8    | Barbara   | 879 Oak      | Gary    | IN    | 46100 | 555-4321
+(5 rows)
+
+          List of relations
+ Schema |   Name   | Type  |  Owner   
+--------+----------+-------+----------
+ store  | Customer | table | postgres
+(1 row)
+
+                       Table "store.Customer"
+   Column   |         Type          | Collation | Nullable | Default 
+------------+-----------------------+-----------+----------+---------
+ CustomerID | character(6)          |           | not null | 
+ LastName   | character varying(20) |           |          | 
+ FirstName  | character varying(10) |           |          | 
+ Address    | character varying(50) |           |          | 
+ City       | character varying(20) |           |          | 
+ State      | character(2)          |           |          | 
+ Zip        | character(5)          |           |          | 
+ Phone      | character varying(15) |           |          | 
+Indexes:
+    "pk_customer" PRIMARY KEY, btree ("CustomerID")
+Referenced by:
+    TABLE "store."Order"" CONSTRAINT "fk_order_customer" FOREIGN KEY ("CustomerID") REFERENCES store."Customer"("CustomerID")
+
+                     Table "store.Order"
+    Column    |     Type     | Collation | Nullable | Default 
+--------------+--------------+-----------+----------+---------
+ ProductID    | character(6) |           | not null | 
+ OrderID      | character(6) |           | not null | 
+ CustomerID   | character(6) |           | not null | 
+ PurchaseDate | date         |           |          | 
+ Quantity     | integer      |           |          | 
+ TotalCost    | money        |           |          | 
+Indexes:
+    "pk_order" PRIMARY KEY, btree ("OrderID")
+Foreign-key constraints:
+    "fk_order_customer" FOREIGN KEY ("CustomerID") REFERENCES store."Customer"("CustomerID")
+    "fk_order_product" FOREIGN KEY ("ProductID") REFERENCES store."Product"("ProductID")
+
+                         Table "store.Product"
+    Column    |         Type          | Collation | Nullable | Default 
+--------------+-----------------------+-----------+----------+---------
+ ProductID    | character(6)          |           | not null | 
+ ProductName  | character varying(40) |           |          | 
+ Model        | character varying(10) |           |          | 
+ Manufacturer | character varying(40) |           |          | 
+ UnitPrice    | money                 |           |          | 
+ Inventory    | integer               |           |          | 
+Indexes:
+    "pk_product" PRIMARY KEY, btree ("ProductID")
+Referenced by:
+    TABLE "store."Order"" CONSTRAINT "fk_order_product" FOREIGN KEY ("ProductID") REFERENCES store."Product"("ProductID")
+
+        Index "store.pk_customer"
+   Column   |     Type     |  Definition  
+------------+--------------+--------------
+ CustomerID | character(6) | "CustomerID"
+primary key, btree, for table "store.Customer"
+
+       Index "store.pk_order"
+ Column  |     Type     | Definition 
+---------+--------------+------------
+ OrderID | character(6) | "OrderID"
+primary key, btree, for table "store.Order"
+
+        Index "store.pk_product"
+  Column   |     Type     | Definition  
+-----------+--------------+-------------
+ ProductID | character(6) | "ProductID"
+primary key, btree, for table "store.Product"
+
